@@ -5,6 +5,10 @@
 //     For all details and documentation:
 //     http://backbonejs.org
 
+import _ from 'underscore';
+import $ from 'jquery';
+import { Backbone } from './backbone.js';
+
 // Initial Setup
 // -------------
 
@@ -12,22 +16,22 @@
 var slice = Array.prototype.slice;
 
 // Current version of the library. Keep in sync with `package.json`.
-Backbone.VERSION = '1.4.1';
+export var VERSION = '1.4.1';
 
 // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
 // the `$` variable.
-Backbone.$ = $;
+export $;
 
 // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
 // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method`
 // parameter and set a `X-Http-Method-Override` header.
-Backbone.emulateHTTP = false;
+export var emulateHTTP = false;
 
 // Turn on `emulateJSON` to support legacy servers that can't deal with direct
 // `application/json` requests ... this will encode the body as
 // `application/x-www-form-urlencoded` instead and will send the model in a
 // form param named `model`.
-Backbone.emulateJSON = false;
+export var emulateJSON = false;
 
 // Backbone.Events
 // ---------------
@@ -38,11 +42,11 @@ Backbone.emulateJSON = false;
 // succession.
 //
 //     var object = {};
-//     _.extend(object, Backbone.Events);
+//     _.extend(object, Events);
 //     object.on('expand', function(){ alert('expanded'); });
 //     object.trigger('expand');
 //
-var Events = Backbone.Events = {};
+export var Events = {};
 
 // Regular expression used to split event strings.
 var eventSplitter = /\s+/;
@@ -356,10 +360,6 @@ Listening.prototype.cleanup = function() {
 Events.bind   = Events.on;
 Events.unbind = Events.off;
 
-// Allow the `Backbone` object to serve as a global event bus, for folks who
-// want global "pubsub" in a convenient place.
-_.extend(Backbone, Events);
-
 // Backbone.Model
 // --------------
 
@@ -370,7 +370,7 @@ _.extend(Backbone, Events);
 
 // Create a new model with the specified attributes. A client id (`cid`)
 // is automatically generated and assigned for you.
-var Model = Backbone.Model = function(attributes, options) {
+export function Model(attributes, options) {
     var attrs = attributes || {};
     options || (options = {});
     this.preinitialize.apply(this, arguments);
@@ -742,7 +742,7 @@ _.extend(Model.prototype, Events, {
 // Create a new **Collection**, perhaps to contain a specific type of `model`.
 // If a `comparator` is specified, the Collection will maintain
 // its models in sort order, as they're added and removed.
-var Collection = Backbone.Collection = function(models, options) {
+export function Collection(models, options) {
     options || (options = {});
     this.preinitialize.apply(this, arguments);
     if (options.model) this.model = options.model;
@@ -1326,9 +1326,9 @@ CollectionIterator.prototype.next = function() {
 // having to worry about render order ... and makes it easy for the view to
 // react to specific changes in the state of your models.
 
-// Creating a Backbone.View creates its initial element outside of the DOM,
+// Creating a View creates its initial element outside of the DOM,
 // if an existing element is not provided...
-var View = Backbone.View = function(options) {
+export function View(options) {
     this.cid = _.uniqueId('view');
     this.preinitialize.apply(this, arguments);
     _.extend(this, _.pick(options, viewOptions));
@@ -1609,7 +1609,7 @@ _.each([
 // instead of `application/json` with the model in a param named `model`.
 // Useful when interfacing with server-side languages like **PHP** that make
 // it difficult to read the body of `PUT` requests.
-Backbone.sync = function(method, model, options) {
+export function sync(method, model, options) {
     var type = methodMap[method];
 
     // Default options, unless specified.
@@ -1673,7 +1673,7 @@ Backbone.sync = function(method, model, options) {
     return xhr;
 };
 
-// Map from CRUD to HTTP for our default `Backbone.sync` implementation.
+// Map from CRUD to HTTP for our default `sync` implementation.
 var methodMap = {
     'create': 'POST',
     'update': 'PUT',
@@ -1684,7 +1684,7 @@ var methodMap = {
 
 // Set the default implementation of `Backbone.ajax` to proxy through to `$`.
 // Override this if you'd like to use a different library.
-Backbone.ajax = function() {
+export function ajax() {
     return Backbone.$.ajax.apply(Backbone.$, arguments);
 };
 
@@ -1693,7 +1693,7 @@ Backbone.ajax = function() {
 
 // Routers map faux-URLs to actions, and fire events when routes are
 // matched. Creating a new one sets its `routes` hash, if not set statically.
-var Router = Backbone.Router = function(options) {
+export function Router(options) {
     options || (options = {});
     this.preinitialize.apply(this, arguments);
     if (options.routes) this.routes = options.routes;
@@ -1708,7 +1708,7 @@ var namedParam    = /(\(\?)?:\w+/g;
 var splatParam    = /\*\w+/g;
 var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
 
-// Set up all inheritable **Backbone.Router** properties and methods.
+// Set up all inheritable **Router** properties and methods.
 _.extend(Router.prototype, Events, {
 
     // preinitialize is an empty function by default. You can override it with a
@@ -1803,7 +1803,7 @@ _.extend(Router.prototype, Events, {
 // [onhashchange](https://developer.mozilla.org/en-US/docs/DOM/window.onhashchange)
 // and URL fragments. If the browser supports neither (old IE, natch),
 // falls back to polling.
-var History = Backbone.History = function() {
+export function History() {
     this.handlers = [];
     this.checkUrl = this.checkUrl.bind(this);
 
@@ -1826,7 +1826,7 @@ var pathStripper = /#.*$/;
 // Has the history handling already been started?
 History.started = false;
 
-// Set up all inheritable **Backbone.History** properties and methods.
+// Set up all inheritable **History** properties and methods.
 _.extend(History.prototype, Events, {
 
     // The default interval to poll for hash changes, if necessary, is
@@ -2120,7 +2120,7 @@ _.extend(History.prototype, Events, {
 });
 
 // Create the default Backbone.history.
-Backbone.history = new History;
+export var history = new History;
 
 // Helpers
 // -------
