@@ -20,7 +20,7 @@ export var VERSION = '1.4.1';
 
 // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
 // the `$` variable.
-export $;
+export { $ };
 
 // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
 // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method`
