@@ -19,6 +19,7 @@ export default [{
             'underscore/modules/extend.js': '_.extend',
         },
         freeze: false,
+        strict: false,
         sourcemap: true,
         sourcemapExcludeSources: true,
     },
